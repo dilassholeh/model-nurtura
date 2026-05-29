@@ -9,12 +9,32 @@ app = Flask(__name__)
 model = joblib.load("model_kmeans.pkl")
 scaler = joblib.load("scaler.pkl")
 
+
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "API ML aktif"
+    })
+
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
         data = request.get_json()
 
+        if not data:
+            return jsonify({
+                "status": "error",
+                "message": "No JSON received"
+            }), 400
+
         features = data.get("features")
+
+        if not features:
+            return jsonify({
+                "status": "error",
+                "message": "Features is required"
+            }), 400
 
         print("INPUT:", features)
 
@@ -30,8 +50,6 @@ def predict():
 
         print("PREDIKSI CLUSTER:", cluster)
 
-        # 🔥 FINAL LOGIC SESUAI HASIL ANALISIS KAMU
-        # cluster 0 = centroid lebih tinggi = beresiko
         if cluster == 0:
             result = "Beresiko"
         else:
