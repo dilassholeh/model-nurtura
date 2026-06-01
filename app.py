@@ -17,9 +17,11 @@ from utils.screening_features import build_features
 app = Flask(__name__)
 
 # load model & scaler
-model = joblib.load("model_kmeans.pkl")
+model = joblib.load("kmeans_model.pkl")
 scaler = joblib.load("scaler.pkl")
-
+print("MODEL =", model)
+print("CENTROIDS =")
+print(scaler.inverse_transform(model.cluster_centers_))
 CLUSTER_BERESIKO = 0
 
 # MongoDB connection
